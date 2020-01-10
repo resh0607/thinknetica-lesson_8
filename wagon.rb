@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 class Wagon
   attr_reader :id, :type
   attr_accessor :train
   include Manufacturer
   @@wagons = {}
 
-  ID_FORMAT = /^0[a-z]{1}\d{3}$/i
+  ID_FORMAT = /^0[a-z]{1}\d{3}$/i.freeze
 
   def initialize(id)
     @id = id
@@ -15,7 +17,7 @@ class Wagon
   def valid?
     validate!
     true
-  rescue
+  rescue StandardError
     false
   end
 

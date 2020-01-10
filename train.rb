@@ -1,10 +1,12 @@
-class Train 
+# frozen_string_literal: true
+
+class Train
   attr_reader :current_speed, :wagons, :current_station, :number, :type
   include Manufacturer
   include InstanceCounter
   @@trains = {}
 
-  NUMBER_FORMAT = /^[a-z0-9]{3}-?[a-z0-9]{2}$/i
+  NUMBER_FORMAT = /^[a-z0-9]{3}-?[a-z0-9]{2}$/i.freeze
 
   def initialize(number)
     @number = number
@@ -18,7 +20,7 @@ class Train
   def valid?
     validate!
     true
-  rescue
+  rescue StandardError
     false
   end
 
@@ -31,7 +33,7 @@ class Train
   def self.find(number)
     @@trains[number].nil? ? nil : @@trains[number]
   end
- 
+
   def speed_up(num)
     @current_speed += num
   end
@@ -41,21 +43,17 @@ class Train
   end
 
   def add_wagon(wagon)
-    if is_idle? && self.type == wagon.type
-      @wagons << wagon
-      wagon.train = self
-    else
-      raise 'Поезд находится в движении или не совпадают типы поезд/вагон.'
-    end
+    raise 'Поезд находится в движении или не совпадают типы поезд/вагон.' unless idle? && type == wagon.type
+
+    @wagons << wagon
+    wagon.train = self
   end
-    
+
   def remove_wagon(wagon)
-    if is_idle?
-      @wagons.delete(wagon)
-      wagon.train = nil
-    else
-      raise 'Невозможно отцепить вагон, когда поезд движется'
-    end
+    raise 'Невозможно отцепить вагон, когда поезд движется' unless idle?
+
+    @wagons.delete(wagon)
+    wagon.train = nil
   end
 
   def set_route(route)
@@ -65,19 +63,15 @@ class Train
   end
 
   def previous_station
-    if @current_station == @route.stations.first
-      raise 'Нет станции, текущая станция - начальная'
-    else
-      @route.stations[@route.stations.index(@current_station) - 1]
-    end
+    raise 'Нет станции, текущая станция - начальная' if @current_station == @route.stations.first
+
+    @route.stations[@route.stations.index(@current_station) - 1]
   end
 
   def next_station
-    if @current_station == @route.stations.last
-      raise 'Нет станции, текущая станция - конечная'
-    else
-      @route.stations[@route.stations.index(@current_station) + 1]
-    end
+    raise 'Нет станции, текущая станция - конечная' if @current_station == @route.stations.last
+
+    @route.stations[@route.stations.index(@current_station) + 1]
   end
 
   def go_forward
@@ -94,10 +88,8 @@ class Train
 
   protected
 
-  def is_idle?
-    if @current_speed == 0
-      return true
-    end
+  def idle?
+    return true if @current_speed.zero?
   end
 
   def validate!
@@ -113,5 +105,3 @@ class Train
     raise 'Поезд с таким номером уже существует' unless @@trains[number].nil?
   end
 end
-
-

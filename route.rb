@@ -1,24 +1,26 @@
+# frozen_string_literal: true
+
 class Route
-  attr_reader :stations, :name
+  attr_reader :stations
   include InstanceCounter
   @@routes = []
 
   def initialize(initial_station, final_station)
     @stations = [initial_station, final_station]
     validate!
-    @@routes << self 
-    register_instance 
+    @@routes << self
+    register_instance
   end
 
   def valid?
     validate!
     true
-  rescue
+  rescue StandardError
     false
   end
 
-  def name 
-    @name = stations.first.name + '-' + stations.last.name 
+  def name
+    @name = stations.first.name + '-' + stations.last.name
   end
 
   def add_station(station)
@@ -42,10 +44,6 @@ class Route
   end
 
   def validate_route_presence
-    raise 'Такой маршрут уже существует' if @@routes.map { |route| route.stations }.include?(@stations)
+    raise 'Такой маршрут уже существует' if @@routes.map(&:stations).include?(@stations)
   end
 end
-
-
-
-

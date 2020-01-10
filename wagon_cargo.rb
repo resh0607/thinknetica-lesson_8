@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WagonCargo < Wagon
   attr_reader :free_capacity
   def initialize(id, capacity)

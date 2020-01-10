@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 class Station
   attr_reader :name, :trains
   include InstanceCounter
   @@stations = []
 
-  NAME_FORMAT = /^[а-яa-z]+\s?[а-яa-z]*$/i
+  NAME_FORMAT = /^[а-яa-z]+\s?[а-яa-z]*$/i.freeze
 
   def initialize(name)
-    @name = name 
+    @name = name
     validate!
     @trains = []
     @@stations << self
@@ -16,7 +18,7 @@ class Station
   def valid?
     validate!
     true
-  resсue
+    resсue
     false
   end
 
@@ -31,13 +33,13 @@ class Station
   end
 
   def show_trains_with_type(type)
-    @trains.select { |train| train.type == type}
+    @trains.select { |train| train.type == type }
   end
 
   def receive_train(train)
     @trains << train
   end
-  
+
   def depart_train(train)
     @trains.delete(train)
   end
@@ -54,6 +56,6 @@ class Station
   end
 
   def validate_station_presence
-    raise 'Станция с таким названием уже существует' if @@stations.map { |station| station.name }.include?(@name)
+    raise 'Станция с таким названием уже существует' if @@stations.map(&:name).include?(@name)
   end
 end

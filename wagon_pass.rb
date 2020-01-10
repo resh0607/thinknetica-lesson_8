@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WagonPass < Wagon
   attr_reader :free_seats
   def initialize(id, seats_quantity)

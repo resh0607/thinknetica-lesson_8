@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'menu'
 require_relative 'manufacturer'
 require_relative 'instance_counter'
@@ -12,4 +14,3 @@ require_relative 'wagon_pass'
 
 controller = Menu.new
 controller.start
-
